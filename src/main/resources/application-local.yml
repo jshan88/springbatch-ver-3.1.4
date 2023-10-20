@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: batch
+  batch:
+    jdbc:
+      initialize-schema: never
+    job:
+      name: ${job.name:NONE}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      dialect: org.hibernate.dialect.MySQL8Dialect
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        format_sql: true
+  datasource:
+    event:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/emp_event?serverTimezone=UTC&characterEncoding=UTF-8
+      username: emp
+      password: 1234
+    privacy:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/emp_privacy?serverTimezone=UTC&characterEncoding=UTF-8
+      username: emp
+      password: 1234
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%level] %logger : %msg%n"
+  level:
+    org.springframework.batch: debug
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.type.descriptor.sql: trace
+    com.zaxxer.hikari: trace
+    com.zaxxer.hikari.HikariConfig: debug
+    org.springframework.orm.jpa: debug
+    org.springframework.transaction: debug

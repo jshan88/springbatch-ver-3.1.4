@@ -38,7 +38,7 @@ public class EventDataSourceConfig {
     public LocalContainerEntityManagerFactoryBean eventEntityManagerFactory(@Qualifier("eventDataSource") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
-        entityManagerFactoryBean.setPackagesToScan("com.cheilemp.batch.entity.event");
+        entityManagerFactoryBean.setPackagesToScan("com.jshan.batch.entity.event");
         entityManagerFactoryBean.setPersistenceUnitName("event");
 
         Properties properties = new Properties();

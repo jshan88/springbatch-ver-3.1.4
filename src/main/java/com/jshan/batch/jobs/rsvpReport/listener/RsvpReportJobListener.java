@@ -25,7 +25,7 @@ public class RsvpReportJobListener implements JobExecutionListener {
 
     @Override
     public void afterJob(JobExecution jobExecution) {
-        dailySnapshotRepository.deleteAllInBatch();
+//        dailySnapshotRepository.deleteAllInBatch();
 
         ExitStatus exitStatus = jobExecution.getExitStatus();
         String jobName = jobExecution.getJobInstance().getJobName();

@@ -1,5 +1,6 @@
 package com.jshan.batch.entity.privacy;
 
+import com.jshan.batch.entity.CommonEntity;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -13,9 +14,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@Table(name = "bat_rsvp_daily_guest_summary")
+@Table(name = "bat_rsvp_daily_guest_summary", catalog = "emp_batch")
 @Entity
-public class GuestDailySummary {
+public class GuestDailySummary extends CommonEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

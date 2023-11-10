@@ -56,7 +56,7 @@ public class GuestDailyReader extends JpaCursorItemReader<Guest> {
                 SELECT g
                 FROM Guest g
                 WHERE 1=1
-                AND g.eventId in :rsvpEventIdSet 
+                AND g.eventId in :rsvpEventIdSet
                 AND g.createdAt < :toDate
                 """;
     }

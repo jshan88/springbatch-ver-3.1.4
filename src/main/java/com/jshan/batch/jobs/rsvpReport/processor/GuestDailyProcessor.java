@@ -25,8 +25,11 @@ public class GuestDailyProcessor implements ItemProcessor<Guest, GuestDailySnaps
             .statusCode(guest.getStatusCode().toString())
             .confirmFlag(guest.getConfirmFlag())
             .checkinFlag(guest.getCheckinFlag())
+            .groupId(guest.getGroupId())
             .groupName(guest.getGroupName())
+            .organizationId(guest.getOrganizationId())
             .organizationName(guest.getOrganizationName())
+            .subOrganizationId(guest.getSubOrganizationId())
             .subOrganizationName(guest.getSubOrganizationName())
             .date(requestDate)
             .build();

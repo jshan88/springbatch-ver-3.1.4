@@ -35,7 +35,7 @@ public class PrivacyDataSourceConfig {
     public LocalContainerEntityManagerFactoryBean privacyEntityManagerFactory(@Qualifier("privacyDataSource") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
-        entityManagerFactoryBean.setPackagesToScan("com.cheilemp.batch.entity.privacy");
+        entityManagerFactoryBean.setPackagesToScan("com.jshan.batch.entity.privacy");
         entityManagerFactoryBean.setPersistenceUnitName("privacy");
 
         Properties properties = new Properties();

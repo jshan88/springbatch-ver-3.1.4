@@ -1,6 +1,7 @@
 package com.jshan.batch.jobs.rsvpReport.configuration;
 
 import com.jshan.batch.jobs.rsvpReport.listener.RsvpReportJobListener;
+import com.jshan.batch.jobs.rsvpReport.listener.SnapshotNewGuestsStepListener;
 import com.jshan.batch.jobs.rsvpReport.listener.SummarizeGuestsStepListener;
 import com.jshan.batch.jobs.rsvpReport.persistence.InMemorySummaryMap;
 import com.jshan.batch.jobs.rsvpReport.processor.GuestDailyProcessor;
@@ -30,6 +31,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Slf4j
 @Configuration
 public class RsvpReportConfiguration {
+    public static final String RSVP_REPORT_JOB = "rsvpReportJob";
+    public static final String EXTRACT_META_DATA_STEP = "extractMetaData";
+    public static final String LOAD_GUEST_SNAPSHOTS_STEP = "loadGuestSnapshots";
+    public static final String SUMMARIZE_GUESTS_STEP = "summarizeGuests";
     private final PlatformTransactionManager eventTransactionManager;
     private final PlatformTransactionManager privacyTransactionManager;
 
@@ -53,7 +58,7 @@ public class RsvpReportConfiguration {
         String[] requiredParameters = {"requestDate"};
         String[] optionalParameters = {};
 
-        return new JobBuilder("rsvpReportJob", jobRepository)
+        return new JobBuilder(RSVP_REPORT_JOB, jobRepository)
                     .validator(new DefaultJobParametersValidator(requiredParameters, optionalParameters))
                     .start(metaDataStep)
                     .next(snapshotNewGuestsStep)
@@ -71,7 +76,7 @@ public class RsvpReportConfiguration {
     @JobScope
     public Step metaDataStep(JobRepository jobRepository,
                              EventMetaDataSetTasklet eventMetaDataSetTasklet) {
-        return new StepBuilder("step1", jobRepository)
+        return new StepBuilder(EXTRACT_META_DATA_STEP, jobRepository)
             .tasklet(eventMetaDataSetTasklet, eventTransactionManager)
             .listener(promotionListener())
             .build();
@@ -97,12 +102,14 @@ public class RsvpReportConfiguration {
     public Step snapshotNewGuestsStep(JobRepository jobRepository,
                                       GuestDailyReader guestDailyReader,
                                       GuestDailyProcessor guestDailyProcessor,
-                                      GuestDailySnapshotWriter guestDailySnapshotWriter) {
-        return new StepBuilder("step2", jobRepository)
+                                      GuestDailySnapshotWriter guestDailySnapshotWriter,
+                                      SnapshotNewGuestsStepListener snapshotNewGuestsStepListener) {
+        return new StepBuilder(LOAD_GUEST_SNAPSHOTS_STEP, jobRepository)
             .<Guest, GuestDailySnapshot>chunk(100, privacyTransactionManager)
             .reader(guestDailyReader)
             .processor(guestDailyProcessor)
             .writer(guestDailySnapshotWriter)
+            .listener(snapshotNewGuestsStepListener)
             .build();
     }
 
@@ -122,7 +129,7 @@ public class RsvpReportConfiguration {
                                     GuestSnapshotProcessor guestSnapshotProcessor,
                                     GuestDailySummaryWriter guestDailySummaryWriter,
                                     SummarizeGuestsStepListener summarizeGuestsStepListener) {
-        return new StepBuilder("step3", jobRepository)
+        return new StepBuilder(SUMMARIZE_GUESTS_STEP, jobRepository)
             .<GuestDailySnapshot, SummaryKey>chunk(100, privacyTransactionManager)
             .reader(guestSnapshotReader)
             .processor(guestSnapshotProcessor)
